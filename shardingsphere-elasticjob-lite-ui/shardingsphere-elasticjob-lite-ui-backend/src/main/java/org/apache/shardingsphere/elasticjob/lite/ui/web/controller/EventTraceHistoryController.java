@@ -25,8 +25,8 @@ import org.apache.shardingsphere.elasticjob.lite.ui.service.EventTraceHistorySer
 import org.apache.shardingsphere.elasticjob.lite.ui.util.SessionEventTraceDataSourceConfiguration;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResult;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResultUtil;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobExecutionEvent;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobStatusTraceEvent;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobExecutionEvent;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobStatusTraceEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,13 +46,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/event-trace")
 public final class EventTraceHistoryController {
-    
+
     @Autowired
     private EventTraceHistoryService eventTraceHistoryService;
-    
+
     @Autowired
     private EventTraceDataSourceConfigurationService eventTraceDataSourceConfigurationService;
-    
+
     /**
      * Find job execution events.
      *
@@ -64,7 +64,7 @@ public final class EventTraceHistoryController {
         Page<JobExecutionEvent> jobExecutionEvents = eventTraceHistoryService.findJobExecutionEvents(requestParams);
         return ResponseResultUtil.build(BasePageResponse.of(jobExecutionEvents));
     }
-    
+
     /**
      * Find all job names with specific prefix.
      *
@@ -75,7 +75,7 @@ public final class EventTraceHistoryController {
     public ResponseResult<List<String>> findJobNamesByPrefix(@PathVariable(required = false) final String jobNamePrefix) {
         return ResponseResultUtil.build(eventTraceHistoryService.findJobNamesInExecutionLog(Optional.ofNullable(jobNamePrefix).orElse("")));
     }
-    
+
     /**
      * Find all ip addresses with specific prefix.
      * @param ipPrefix ip prefix
@@ -85,7 +85,7 @@ public final class EventTraceHistoryController {
     public ResponseResult<List<String>> findIpByPrefix(@PathVariable(required = false) final String ipPrefix) {
         return ResponseResultUtil.build(eventTraceHistoryService.findIpInExecutionLog(Optional.ofNullable(ipPrefix).orElse("")));
     }
-    
+
     /**
      * Find job status trace events.
      *
@@ -97,7 +97,7 @@ public final class EventTraceHistoryController {
         Page<JobStatusTraceEvent> jobStatusTraceEvents = eventTraceHistoryService.findJobStatusTraceEvents(requestParams);
         return ResponseResultUtil.build(BasePageResponse.of(jobStatusTraceEvents));
     }
-    
+
     /**
      * Find all job names with specific prefix in status trace log.
      *
@@ -108,7 +108,7 @@ public final class EventTraceHistoryController {
     public ResponseResult<List<String>> findJobNamesByPrefixInStatusTraceLog(@PathVariable(required = false) final String jobNamePrefix) {
         return ResponseResultUtil.build(eventTraceHistoryService.findJobNamesInStatusTraceLog(Optional.ofNullable(jobNamePrefix).orElse("")));
     }
-    
+
     @ModelAttribute
     private void initDataSource() {
         eventTraceDataSourceConfigurationService.loadActivated().ifPresent(SessionEventTraceDataSourceConfiguration::setDataSourceConfiguration);

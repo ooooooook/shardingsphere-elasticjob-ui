@@ -17,8 +17,8 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.web.controller;
 
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.domain.JobBriefInfo;
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.domain.ShardingInfo;
+import org.apache.shardingsphere.elasticjob.lifecycle.domain.JobBriefInfo;
+import org.apache.shardingsphere.elasticjob.lifecycle.domain.ShardingInfo;
 import org.apache.shardingsphere.elasticjob.lite.ui.service.JobAPIService;
 import org.apache.shardingsphere.elasticjob.lite.ui.util.SessionRegistryCenterConfiguration;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResult;
@@ -40,27 +40,27 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/jobs")
 public final class JobOperationController {
-    
+
     private JobAPIService jobAPIService;
-    
+
     @Autowired
     public JobOperationController(final JobAPIService jobAPIService) {
         this.jobAPIService = jobAPIService;
     }
-    
+
     /**
      * Get jobs total count.
-     * 
+     *
      * @return jobs total count
      */
     @GetMapping("/count")
     public int getJobsTotalCount() {
         return jobAPIService.getJobStatisticsAPI().getJobsTotalCount();
     }
-    
+
     /**
      * Get all jobs brief info.
-     * 
+     *
      * @return all jobs brief info
      */
     @GetMapping("/getAllJobsBriefInfo")
@@ -69,10 +69,10 @@ public final class JobOperationController {
                 jobAPIService.getJobStatisticsAPI().getAllJobsBriefInfo() : Collections.emptyList();
         return ResponseResultUtil.build(data);
     }
-    
+
     /**
      * Trigger job.
-     * 
+     *
      * @param jobName job name
      */
     @PostMapping("/{jobName}/trigger")
@@ -80,10 +80,10 @@ public final class JobOperationController {
         jobAPIService.getJobOperatorAPI().trigger(jobName);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Disable job.
-     * 
+     *
      * @param jobName job name
      */
     @PostMapping(value = "/{jobName}/disable")
@@ -91,7 +91,7 @@ public final class JobOperationController {
         jobAPIService.getJobOperatorAPI().disable(jobName, null);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Enable job.
      *
@@ -102,10 +102,10 @@ public final class JobOperationController {
         jobAPIService.getJobOperatorAPI().enable(jobName, null);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Shutdown job.
-     * 
+     *
      * @param jobName job name
      */
     @PostMapping(value = "/{jobName}/shutdown")
@@ -113,10 +113,10 @@ public final class JobOperationController {
         jobAPIService.getJobOperatorAPI().shutdown(jobName, null);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Get sharding info.
-     * 
+     *
      * @param jobName job name
      * @return sharding info
      */
@@ -125,7 +125,7 @@ public final class JobOperationController {
         Collection<ShardingInfo> data =  jobAPIService.getShardingStatisticsAPI().getShardingInfo(jobName);
         return ResponseResultUtil.build(data);
     }
-    
+
     /**
      * Disable sharding.
      *
@@ -137,7 +137,7 @@ public final class JobOperationController {
         jobAPIService.getShardingOperateAPI().disable(jobName, item);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Enable sharding.
      *

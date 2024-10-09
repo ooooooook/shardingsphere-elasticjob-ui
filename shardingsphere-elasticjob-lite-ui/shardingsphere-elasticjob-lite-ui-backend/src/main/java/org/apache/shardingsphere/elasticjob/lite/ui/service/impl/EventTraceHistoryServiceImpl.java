@@ -19,8 +19,6 @@ package org.apache.shardingsphere.elasticjob.lite.ui.service.impl;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobExecutionEvent;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobStatusTraceEvent;
 import org.apache.shardingsphere.elasticjob.lite.ui.dao.search.JobExecutionLogRepository;
 import org.apache.shardingsphere.elasticjob.lite.ui.dao.search.JobStatusTraceLogRepository;
 import org.apache.shardingsphere.elasticjob.lite.ui.domain.JobExecutionLog;
@@ -29,6 +27,8 @@ import org.apache.shardingsphere.elasticjob.lite.ui.dto.request.BasePageRequest;
 import org.apache.shardingsphere.elasticjob.lite.ui.dto.request.FindJobExecutionEventsRequest;
 import org.apache.shardingsphere.elasticjob.lite.ui.dto.request.FindJobStatusTraceEventsRequest;
 import org.apache.shardingsphere.elasticjob.lite.ui.service.EventTraceHistoryService;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobExecutionEvent;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobStatusTraceEvent;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -55,13 +55,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public final class EventTraceHistoryServiceImpl implements EventTraceHistoryService {
-    
+
     @Autowired
     private JobExecutionLogRepository jobExecutionLogRepository;
-    
+
     @Autowired
     private JobStatusTraceLogRepository jobStatusTraceLogRepository;
-    
+
     @Override
     public Page<JobExecutionEvent> findJobExecutionEvents(final FindJobExecutionEventsRequest findJobExecutionEventsRequest) {
         Example<JobExecutionLog> jobExecutionLogExample = getExample(findJobExecutionEventsRequest, JobExecutionLog.class);
@@ -70,17 +70,17 @@ public final class EventTraceHistoryServiceImpl implements EventTraceHistoryServ
         Page<JobExecutionLog> page = jobExecutionLogRepository.findAll(specification, getPageable(findJobExecutionEventsRequest, JobExecutionLog.class));
         return new PageImpl<>(page.getContent().stream().map(JobExecutionLog::toJobExecutionEvent).collect(Collectors.toList()), null, page.getTotalElements());
     }
-    
+
     @Override
     public List<String> findJobNamesInExecutionLog(final String jobNamePrefix) {
         return jobExecutionLogRepository.findJobNameByJobNameLike(jobNamePrefix);
     }
-    
+
     @Override
     public List<String> findIpInExecutionLog(final String ipPrefix) {
         return jobExecutionLogRepository.findIpByIpLike(ipPrefix);
     }
-    
+
     @Override
     public Page<JobStatusTraceEvent> findJobStatusTraceEvents(final FindJobStatusTraceEventsRequest findJobStatusTraceEventsRequest) {
         Example<JobStatusTraceLog> jobStatusTraceLogExample = getExample(findJobStatusTraceEventsRequest, JobStatusTraceLog.class);
@@ -89,12 +89,12 @@ public final class EventTraceHistoryServiceImpl implements EventTraceHistoryServ
         Page<JobStatusTraceLog> page = jobStatusTraceLogRepository.findAll(specification, getPageable(findJobStatusTraceEventsRequest, JobStatusTraceLog.class));
         return new PageImpl<>(page.getContent().stream().map(JobStatusTraceLog::toJobStatusTraceEvent).collect(Collectors.toList()), null, page.getTotalElements());
     }
-    
+
     @Override
     public List<String> findJobNamesInStatusTraceLog(final String jobNamePrefix) {
         return jobStatusTraceLogRepository.findJobNameByJobNameLike(jobNamePrefix);
     }
-    
+
     private <T> Pageable getPageable(final BasePageRequest pageRequest, final Class<T> clazz) {
         int page = 0;
         int perPage = BasePageRequest.DEFAULT_PAGE_SIZE;
@@ -104,7 +104,7 @@ public final class EventTraceHistoryServiceImpl implements EventTraceHistoryServ
         }
         return new PageRequest(page, perPage, getSort(pageRequest, clazz));
     }
-    
+
     private <T> Sort getSort(final BasePageRequest pageRequest, final Class<T> clazz) {
         Sort sort = null;
         boolean sortFieldIsPresent = Arrays.stream(clazz.getDeclaredFields())
@@ -123,7 +123,7 @@ public final class EventTraceHistoryServiceImpl implements EventTraceHistoryServ
         }
         return sort;
     }
-    
+
     private <T> Specification<T> getSpecWithExampleAndDate(final Example<T> example, final Date from, final Date to, final String field) {
         return (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
@@ -138,7 +138,7 @@ public final class EventTraceHistoryServiceImpl implements EventTraceHistoryServ
             return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
-    
+
     private <T> Example<T> getExample(final Object source, final Class<T> clazz) {
         T instance = BeanUtils.instantiateClass(clazz);
         BeanUtils.copyProperties(source, instance);

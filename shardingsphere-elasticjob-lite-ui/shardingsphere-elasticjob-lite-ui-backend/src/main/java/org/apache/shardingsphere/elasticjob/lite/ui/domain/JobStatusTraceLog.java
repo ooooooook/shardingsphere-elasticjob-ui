@@ -18,7 +18,8 @@
 package org.apache.shardingsphere.elasticjob.lite.ui.domain;
 
 import lombok.Data;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobStatusTraceEvent;
+import org.apache.shardingsphere.elasticjob.spi.executor.ExecutionType;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobStatusTraceEvent;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,40 +31,40 @@ import java.util.Date;
 @Table(name = "JOB_STATUS_TRACE_LOG")
 @Entity
 public class JobStatusTraceLog {
-    
+
     @Id
     private String id;
-    
+
     @Column(name = "job_name")
     private String jobName;
-    
+
     @Column(name = "original_task_id")
     private String originalTaskId;
-    
+
     @Column(name = "task_id")
     private String taskId;
-    
+
     @Column(name = "slave_id")
     private String slaveId;
-    
+
     @Column(name = "source")
     private String source;
-    
+
     @Column(name = "execution_type")
     private String executionType;
-    
+
     @Column(name = "sharding_item")
     private String shardingItem;
-    
+
     @Column(name = "state")
     private String state;
-    
+
     @Column(name = "message")
     private String message;
-    
+
     @Column(name = "creation_time")
     private Date creationTime;
-    
+
     /**
      * JobStatusTraceLog convert to JobStatusTraceEvent.
      *
@@ -76,13 +77,12 @@ public class JobStatusTraceLog {
                 originalTaskId,
                 taskId,
                 slaveId,
-                JobStatusTraceEvent.Source.valueOf(source),
-                executionType,
+                ExecutionType.valueOf(executionType),
                 shardingItem,
                 JobStatusTraceEvent.State.valueOf(state),
                 message,
                 creationTime
         );
     }
-    
+
 }

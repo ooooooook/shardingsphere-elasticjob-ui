@@ -26,17 +26,17 @@
     <artifactId>shardingsphere-elasticjob-ui-distribution</artifactId>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
-    
+
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
-    
+
     <modules>
         <module>shardingsphere-elasticjob-ui-src-distribution</module>
         <module>shardingsphere-elasticjob-lite-ui-bin-distribution</module>
-        <module>shardingsphere-elasticjob-cloud-ui-bin-distribution</module>
+<!--        <module>shardingsphere-elasticjob-cloud-ui-bin-distribution</module>-->
     </modules>
-    
+
     <build>
         <finalName>apache-shardingsphere-elasticjob-${project.version}</finalName>
     </build>

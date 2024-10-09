@@ -17,8 +17,8 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.web.controller;
 
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.domain.JobBriefInfo;
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.domain.ServerBriefInfo;
+import org.apache.shardingsphere.elasticjob.lifecycle.domain.JobBriefInfo;
+import org.apache.shardingsphere.elasticjob.lifecycle.domain.ServerBriefInfo;
 import org.apache.shardingsphere.elasticjob.lite.ui.service.JobAPIService;
 import org.apache.shardingsphere.elasticjob.lite.ui.util.SessionRegistryCenterConfiguration;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResult;
@@ -42,27 +42,27 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/servers")
 public final class ServerOperationController {
-    
+
     private JobAPIService jobAPIService;
-    
+
     @Autowired
     public ServerOperationController(final JobAPIService jobAPIService) {
         this.jobAPIService = jobAPIService;
     }
-    
+
     /**
      * Get servers total count.
-     * 
+     *
      * @return servers total count
      */
     @GetMapping("/count")
     public int getServersTotalCount() {
         return jobAPIService.getServerStatisticsAPI().getServersTotalCount();
     }
-    
+
     /**
      * Get all servers brief info.
-     * 
+     *
      * @return all servers brief info
      */
     @GetMapping("/getAllServersBriefInfo")
@@ -71,7 +71,7 @@ public final class ServerOperationController {
                 jobAPIService.getServerStatisticsAPI().getAllServersBriefInfo() : Collections.emptyList();
         return ResponseResultUtil.build(data);
     }
-    
+
     /**
      * Disable server.
      *
@@ -82,7 +82,7 @@ public final class ServerOperationController {
         jobAPIService.getJobOperatorAPI().disable(null, serverIp);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Enable server.
      *
@@ -93,7 +93,7 @@ public final class ServerOperationController {
         jobAPIService.getJobOperatorAPI().enable(null, serverIp);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Shutdown server.
      *
@@ -104,7 +104,7 @@ public final class ServerOperationController {
         jobAPIService.getJobOperatorAPI().shutdown(null, serverIp);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Remove server.
      *
@@ -115,7 +115,7 @@ public final class ServerOperationController {
         jobAPIService.getJobOperatorAPI().remove(null, serverIp);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Get jobs.
      *
@@ -127,10 +127,10 @@ public final class ServerOperationController {
         Collection<JobBriefInfo> data = jobAPIService.getJobStatisticsAPI().getJobsBriefInfo(serverIp);
         return ResponseResultUtil.build(data);
     }
-    
+
     /**
      * Disable server job.
-     * 
+     *
      * @param serverIp server IP address
      * @param jobName job name
      */
@@ -139,7 +139,7 @@ public final class ServerOperationController {
         jobAPIService.getJobOperatorAPI().disable(jobName, serverIp);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Enable server job.
      *
@@ -182,7 +182,7 @@ public final class ServerOperationController {
         jobAPIService.getJobOperatorAPI().shutdown(jobName, serverIp);
         return ResponseResultUtil.build(Boolean.TRUE);
     }
-    
+
     /**
      * Remove server job.
      *
